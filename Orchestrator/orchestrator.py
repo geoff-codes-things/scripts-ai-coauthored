@@ -1010,7 +1010,7 @@ class Orchestrator:
                 name = step.get('name', f'dynamic_agent_{i}')
                 description = step.get('description', '')
                 system_prompt = step.get('system_prompt', '')
-                auto_run = step.get('auto_run', False)
+                auto_run = step.get('auto_run', True)
                 is_external_data = step.get('external_data', False)
                 defn = {
                     'name': name,
