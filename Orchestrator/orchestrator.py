@@ -674,15 +674,27 @@ If you cannot extract the variable, respond with: {{"error": "cannot extract var
 # ============= UTILITIES =============
 
 # Queries LM Studio's /v1/models endpoint and returns the first loaded model ID.
+def _model_param_count(model_id):
+    # Extract the largest parameter count (e.g. "35b" → 35.0, "3.3b" → 3.3) from a model ID.
+    # Used to rank models by size so auto-detection prefers the most capable one.
+    nums = re.findall(r'(\d+(?:\.\d+)?)\s*b\b', model_id, re.IGNORECASE)
+    return max((float(n) for n in nums), default=0.0)
+
 def detect_lm_studio_model(api_base):
     try:
         url = f"{api_base}/models"
         with urllib.request.urlopen(url, timeout=3) as resp:
             data = json.loads(resp.read())
             models = data.get('data', [])
-            if models:
-                verboseprint(f"LM Studio reported models: {[m['id'] for m in models]}")
-                return models[0]['id']
+            if not models:
+                return None
+            verboseprint(f"LM Studio reported models: {[m['id'] for m in models]}")
+            # Skip embedding/reranker models; pick the largest chat model by param count.
+            chat_models = [m for m in models if not re.search(r'embed|rerank', m['id'], re.IGNORECASE)]
+            if not chat_models:
+                chat_models = models
+            best = max(chat_models, key=lambda m: _model_param_count(m['id']))
+            return best['id']
     except Exception as e:
         verboseprint(f"Could not auto-detect model from LM Studio: {e}")
     return None
