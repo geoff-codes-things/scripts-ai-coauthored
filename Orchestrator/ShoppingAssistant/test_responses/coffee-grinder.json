@@ -1,0 +1,7 @@
+{
+  "product": "A Coffee Grinder",
+  "budget": "mid-range",
+  "features": "easy to use and clean, electric / not hand cranked, easily stored when not in use.",
+  "use_case": "grinding coffee in small batches for my drip coffee maker machine",
+  "constraints": "small preferred."
+}

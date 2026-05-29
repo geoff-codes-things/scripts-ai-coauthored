@@ -1,0 +1,17 @@
+#!/bin/zsh
+# release_pipeline
+#
+# Wrapper script to invoke release_pipeline.py via the project venv.
+# Run setup.sh (in the Orchestrator directory) first to create the venv.
+#
+# Usage: ./ReleaseNotes/release_pipeline [args...]
+
+SCRIPT_DIR="${0:A:h}"
+VENV_PYTHON="$SCRIPT_DIR/../.venv/bin/python3"
+
+if [[ ! -x "$VENV_PYTHON" ]]; then
+    print "Error: .venv not found. Run setup.sh in the Orchestrator directory first." >&2
+    exit 1
+fi
+
+exec "$VENV_PYTHON" "$SCRIPT_DIR/release_pipeline.py" "$@"

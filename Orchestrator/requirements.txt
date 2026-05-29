@@ -1,0 +1,4 @@
+open-interpreter
+tiktoken
+setuptools<81
+ddgs

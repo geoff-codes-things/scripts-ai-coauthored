@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# Generated output
+ReleaseNotes/output/*
+!ReleaseNotes/output/.gitkeep
+ShoppingAssistant/output/*
+!ShoppingAssistant/output/.gitkeep
+
+# macOS
+.DS_Store
