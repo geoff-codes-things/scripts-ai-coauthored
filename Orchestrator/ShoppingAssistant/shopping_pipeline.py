@@ -47,6 +47,9 @@ parser.add_argument("--name", required=True,
 parser.add_argument("--orchestrator", default=str(TOP_DIR / "orchestrator.py"),
                     help="Path to orchestrator.py.",
                     metavar="PATH")
+parser.add_argument("--model", default=None,
+                    help="Model name to pass to the orchestrator (e.g. qwen/qwen3.5-35b-a3b). Auto-detected if not provided.",
+                    metavar="MODEL")
 parser.add_argument("--security", choices=["low", "medium", "high"], default="low",
                     help="Security level for the orchestrator. (default: low)")
 parser.add_argument("--skip-research", action="store_true",
@@ -94,6 +97,8 @@ def run_orchestrator(task, output_dir, capture=False):
         "--no-synthesis",
         "--loop",
     ]
+    if args.model:
+        cmd.extend(["--model", args.model])
     if args.security != "low":
         cmd.extend(["--security", args.security])
     if args.verbose:

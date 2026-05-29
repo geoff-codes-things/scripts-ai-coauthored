@@ -62,6 +62,9 @@ parser.add_argument("--token", default=None,
 parser.add_argument("--orchestrator", default=str(TOP_DIR / "orchestrator.py"),
                     help="Path to orchestrator.py. (default: ../orchestrator.py)",
                     metavar="PATH")
+parser.add_argument("--model", default=None,
+                    help="Model name to pass to the orchestrator (e.g. qwen/qwen3.5-35b-a3b). Auto-detected if not provided.",
+                    metavar="MODEL")
 parser.add_argument("--security", choices=["low", "medium", "high"], default="low",
                     help="Security level passed to the orchestrator. (default: low)",
                     metavar="LEVEL")
@@ -247,13 +250,15 @@ def print_pipeline_summary(stats_path, start_line, succeeded, failed):
     print("═" * W + "\n")
 
 # Runs the orchestrator pipeline for one commit URL. Returns True on success.
-def run_orchestrator(commit_url, orchestrator_path, output_dir, verbose=False, security="low", branch=None):
+def run_orchestrator(commit_url, orchestrator_path, output_dir, verbose=False, security="low", branch=None, model=None):
     task = (
         f"Process this GitHub commit, write a release note, and verify it: {commit_url}"
     )
     stats_path = output_dir / "orchestrator_stats.jsonl"
     cmd = [sys.executable, str(orchestrator_path), "--task", task, "--stats-path", str(stats_path),
            "--loop", "--no-synthesis"]
+    if model:
+        cmd.extend(["--model", model])
     if verbose:
         cmd.append("-v")
     if security != "low":
@@ -412,7 +417,8 @@ def run():
         print(bar + "\n")
 
         ok = run_orchestrator(url, args.orchestrator, output_dir,
-                              verbose=args.verbose, security=args.security, branch=branch)
+                              verbose=args.verbose, security=args.security, branch=branch,
+                              model=args.model)
         if ok:
             succeeded += 1
             verboseprint(f"Commit {sha7} succeeded ({succeeded} done, {len(failed)} failed so far)")

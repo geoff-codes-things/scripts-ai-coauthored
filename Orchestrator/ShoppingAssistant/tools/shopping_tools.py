@@ -142,6 +142,12 @@ def fetch_requirements():
         return None
     return dict(row)
 
+def print_requirements():
+    data = fetch_requirements()
+    print('STATUS:', data['status'] if data else 'none')
+    print('RAW ANSWERS:')
+    print(data['raw_answers'] if data else '(no data)')
+
 
 # ── Products ──────────────────────────────────────────────────────────────────
 
