@@ -687,14 +687,47 @@ def detect_lm_studio_model(api_base):
         verboseprint(f"Could not auto-detect model from LM Studio: {e}")
     return None
 
+# Escape bare control characters (newline, tab, etc.) inside JSON string values.
+# LLMs sometimes embed literal newlines in string values, making otherwise valid JSON
+# unparseable. This fixes that without touching structural whitespace between tokens.
+def _sanitize_json_strings(s):
+    result = []
+    in_string = False
+    escaped = False
+    for ch in s:
+        if escaped:
+            result.append(ch)
+            escaped = False
+        elif ch == '\\' and in_string:
+            result.append(ch)
+            escaped = True
+        elif ch == '"':
+            result.append(ch)
+            in_string = not in_string
+        elif in_string and ch == '\n':
+            result.append('\\n')
+        elif in_string and ch == '\r':
+            result.append('\\r')
+        elif in_string and ch == '\t':
+            result.append('\\t')
+        else:
+            result.append(ch)
+    return ''.join(result)
+
 # Finds the first {...} block in a string and parses it as JSON.
+# Falls back to sanitizing unescaped control characters inside strings before retrying.
 def extract_json(text):
     match = re.search(r'\{.*\}', text, re.DOTALL)
     if match:
+        raw = match.group()
         try:
-            return json.loads(match.group())
+            return json.loads(raw)
         except json.JSONDecodeError as e:
             verboseprint(f"JSON parse error: {e}")
+            try:
+                return json.loads(_sanitize_json_strings(raw))
+            except json.JSONDecodeError as e2:
+                verboseprint(f"JSON parse error after sanitization: {e2}")
     return None
 
 # Extracts the first commit SHA (40-char preferred, then 7-char) from text.
