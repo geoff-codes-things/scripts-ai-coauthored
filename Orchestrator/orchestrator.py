@@ -37,7 +37,7 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument("-t", "--task", help="The high-level task for the orchestrator to complete.", required=False, metavar="TEXT")
 parser.add_argument("--agents-dir", default="./agents", help="Directory containing agent JSON definition files. (default: ./agents)", metavar="PATH")
-parser.add_argument("-m", "--model", default=None, help="Model name for LM Studio (e.g. qwen3.5-35b-a3b). Auto-detected if not provided.", metavar="MODEL")
+parser.add_argument("-m", "--model", default=None, help="Model name for LM Studio (e.g. qwen3.6-35b-a3b). Auto-detected if not provided.", metavar="MODEL")
 parser.add_argument("--api-base", default="http://127.0.0.1:1234/v1", help="LM Studio API base URL. (default: http://127.0.0.1:1234/v1)", metavar="URL")
 parser.add_argument("--list-agents", action="store_true", help="Print all available agents and exit.")
 parser.add_argument("--security", choices=["low", "medium", "high"], default="low",

@@ -53,7 +53,7 @@ echo "════════════════════════�
 echo
 echo "  Next steps:"
 echo "  1. Install LM Studio: https://lmstudio.ai"
-echo "  2. Download and load a main model (e.g. Qwen3.5-35b-a3b)"
+echo "  2. Download and load a main model (e.g. Qwen3.6-35b-a3b)"
 echo "  3. For --security medium/high: also load mistralai/ministral-3-3b"
 echo "  4. Start the LM Studio local server"
 echo "  5. ./orchestrator --list-agents"

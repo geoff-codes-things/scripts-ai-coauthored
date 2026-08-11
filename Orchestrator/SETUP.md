@@ -25,7 +25,7 @@ Running it again is safe. The `.venv` is kept if it already exists, and packages
 
 ## 2. Configure LM Studio
 
-1. Open LM Studio and download a main pipeline model. The system was built with **Qwen3.5-35b-a3b**; any capable instruction-following model in the 7–35B range should work.
+1. Open LM Studio and download a main pipeline model. The system was built with **Qwen3.6-35b-a3b**; any capable instruction-following model in the 7–35B range should work.
 2. If you plan to use `--security medium` or `--security high`, also download **mistralai/ministral-3-3b** as the dedicated security model.
 3. Start the **local server** (default address: `http://127.0.0.1:1234/v1`). The orchestrator auto-detects the loaded model at startup.
 
